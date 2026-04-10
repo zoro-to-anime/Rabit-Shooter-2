@@ -8,16 +8,14 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class PowerUp {
 	int power_type = 0;
-	float x;
-	float y;
+	float power_x;
+	float power_y;
 	boolean power_status = true;
 	Texture text;
 	Player player;
 	Random rand = new Random();
-	public PowerUp(Texture text, float x , float y, Player player) {
+	public PowerUp(Texture text, Player player) {
 		this.text = text;
-		this.x = x;
-		this.y = y;
 		this.player = player;
 	}
 	public void spawn() {
@@ -67,7 +65,14 @@ public class PowerUp {
 	public int powerType() {
 		return power_type;
 	}
+	public boolean powerStatus() {
+		return power_status;
+	}
+	public void power_location(float x , float y) {
+		power_x = x;
+		power_y = y;
+	}
 	public void render(SpriteBatch bat) {
-		bat.draw(text, x, y);
+		bat.draw(text, power_x, power_y);
 	}
 }

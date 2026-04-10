@@ -44,6 +44,7 @@ public class Main extends ApplicationAdapter {
     //Color score_color;
     float player_speed = 2;
     static Player player;
+    PowerUp powerUp; 
     Boss boss;
     int player_dmg = 10;
     int playerhp = 100;
@@ -58,7 +59,6 @@ public class Main extends ApplicationAdapter {
         batch = new SpriteBatch();
         hp_font = new BitmapFont();
         score_font = new BitmapFont();
-        
         player_img = new Texture("player.png");
         poo_img = new Texture("poo.png");
         bot_img = new Texture("bot.png");

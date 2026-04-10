@@ -2,7 +2,8 @@
 
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
 
-This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
+This game is just for learning how to use LibGDX fell free to use the code or change it if you want
+Im not a expert im a complete noob ignore how im writing any code
 
 ## Platforms
 
