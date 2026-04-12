@@ -2,6 +2,7 @@ package com.engine.pixeria;
 
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -10,12 +11,14 @@ public class PowerUp {
 	int power_type = 0;
 	float power_x;
 	float power_y;
+	float amination_Interval =0;
+	float animation_end = 0;
 	boolean power_status = false;
 	boolean locationChanger = true;
 	Player player;
 	Random rand = new Random();
 	Texture[] power_img_array = new Texture[4];
-    
+    Texture power_img;
 
 	public PowerUp(Player player) {
 		this.player = player;
@@ -28,7 +31,7 @@ public class PowerUp {
 	}
 	public void spawn() {
 		if(!power_status) {
-			int z= rand.nextInt(2);
+			int z= rand.nextInt(8);
 			if(z==1) {
 				power_status = true;
 				locationChanger = true;
@@ -45,14 +48,32 @@ public class PowerUp {
 				if(r==4) {
 					power_type = 4;
 				}
+				power_img = power_img_array[power_type-1];
 			}
+		}
+		
+	}
+	public void animation() {
+		
+		
+		amination_Interval += Gdx.graphics.getDeltaTime();
+		animation_end += Gdx.graphics.getDeltaTime();
+		if(animation_end <= 0.7f) {
+			if(amination_Interval>=0.05f) {
+				int r = rand.nextInt(4);
+				power_img = power_img_array[r];
+				amination_Interval=0;
+			}	
+		}
+		else {
+			power_img = power_img_array[power_type-1];
 		}
 	}
 	public void tester() {
 		if(power_status) {
 			Rectangle p = new Rectangle(player.x+2.5f,player.y+2.5f,45,45);
 			Rectangle power = new Rectangle(power_x+2.5f,power_y+2.5f,45,45);
-			if(p.overlaps(power)) {
+			if(p.overlaps(power)&& animation_end >= 0.7) {
 				if(power_type == 1) {
 					player.hp+=20;
 				}
@@ -69,6 +90,8 @@ public class PowerUp {
 			    	}
 				}
 				power_status = false;
+				amination_Interval = 0;
+				animation_end=0;
 			}
 		}
 	}
@@ -87,7 +110,8 @@ public class PowerUp {
 	}
 	public void render(SpriteBatch bat) {
 		if(power_status) {
-			bat.draw(power_img_array[power_type-1], power_x, power_y);
+			bat.draw(power_img, power_x, power_y);
+			animation();
 		}
 	}
 }
