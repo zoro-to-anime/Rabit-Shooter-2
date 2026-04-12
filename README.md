@@ -20,10 +20,10 @@ Current version 2.0.0
 - added powerUps
 - there is now a short shield after boss hits you
 
-- as of 2.0.2
+#### As of 2.0.2
 -   powers cant be picked until the animation ends
 
-- as of 2.0.1
+#### As of 2.0.1
 -   added powerUp animation
 
 ## Gradle
