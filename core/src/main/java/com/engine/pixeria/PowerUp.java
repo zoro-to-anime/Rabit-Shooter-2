@@ -28,7 +28,7 @@ public class PowerUp {
 	}
 	public void spawn() {
 		if(!power_status) {
-			int z= rand.nextInt(20);
+			int z= rand.nextInt(2);
 			if(z==1) {
 				power_status = true;
 				locationChanger = true;
@@ -60,6 +60,7 @@ public class PowerUp {
 					Main.score+=200;
 				}
 				if(power_type == 3) {
+					Main.score += Main.bots.size*5;
 					Main.bots.clear();
 				}
 				if(power_type == 4) {

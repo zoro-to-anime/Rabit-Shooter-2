@@ -48,8 +48,9 @@ public class Main extends ApplicationAdapter {
     static Player player;
     PowerUp powerUp; 
     Boss boss;
-    int player_dmg = 10;
+    int player_dmg = 5;
     int playerhp = 100;
+    float kill_cd = 0;
     public static int score = 0;
     float temp_bot_spawn_timer = 0;
     float bullet_cd =0;
@@ -95,7 +96,8 @@ public class Main extends ApplicationAdapter {
         if(game_running && !firstLaunch) {
         bulletspawn();
         
-        
+        powerUp.render(batch);
+        powerUp.tester();
         
         player.update();
         for (Bullet b : bullet) b.update();
@@ -109,6 +111,7 @@ public class Main extends ApplicationAdapter {
         
         temp_bot_spawn_timer += Gdx.graphics.getDeltaTime();
         bullet_cd += Gdx.graphics.getDeltaTime();
+        kill_cd += Gdx.graphics.getDeltaTime();
         if(temp_bot_spawn_timer >=spawn_time) {
         	spawnbots();
         	temp_bot_spawn_timer =0;
@@ -117,8 +120,6 @@ public class Main extends ApplicationAdapter {
         for (Bullet b : bullet) b.render(batch);
         for (Bots b : bots) b.render(batch);
         boss_handle();
-        powerUp.render(batch);
-        powerUp.tester();
         
         }
         hit();
@@ -332,12 +333,11 @@ public class Main extends ApplicationAdapter {
     	}
     	Rectangle p = new Rectangle(player.x+2.5f,player.y+2.5f,45,45);
 		boss_r = new Rectangle(boss.x,boss.y,100,100);
-		if(boss_r.overlaps(p)) {
+		if(boss_r.overlaps(p)&&kill_cd>1.5f) {
 			player.hp -= 20;
-			player.x =75;
-			player.y = 725;
 			boss.hp += 10;
 			score -= 200;
+			kill_cd =0;
 		}
 		for(int j =0;j<bots.size;j++) {
 			Bots c = bots.get(j);
