@@ -5,8 +5,7 @@ A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://git
 This game is just for learning how to use LibGDX ,fell free to use the code or change it if you want
 Im not a expert im a complete noob ignore how im writing any code
 
-This project is being built using eclipse ide 
-Current version 2.0.0
+-This project is being built using eclipse ide 
 
 ## Platforms
 
