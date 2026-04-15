@@ -42,7 +42,7 @@ public class Main extends ApplicationAdapter {
     Rectangle boss_r;
     boolean boss_spawned = false;
     boolean game_running = false;
-    boolean firstLaunch = true;
+    static boolean mainMenu = true;
     boolean pause = false;
     //Color hp_color;
     //Color score_color;
@@ -94,9 +94,9 @@ public class Main extends ApplicationAdapter {
         batch.begin(); //nigga
         
         
-        first_launch();
+        //first_launch();
         
-        if(game_running && !firstLaunch) {
+        if(game_running && !mainMenu) {
         bulletspawn();
         
         powerUp.render(batch);
@@ -127,23 +127,24 @@ public class Main extends ApplicationAdapter {
         
         }
         hit();
-        game_over();
+        //game_over();
         pause();
         batch.end(); // end nigga
         
     }
+    /*
     public void first_launch() {
-    	if(firstLaunch) {
+    	if(mainMenu) {
     		boss_font.draw(batch, "JEW SHOOTER", 175 , 500);
     		hp_font.draw(batch, "PRESS \"ENTER\" TO PLAY", 185 , 300);
     		if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-    			firstLaunch = false;
+    			mainMenu = false;
     			game_running = true;
     		}
     	}
     }
-    public void game_over() {
-    	if(!game_running && !firstLaunch) {
+    /*public void game_over() {
+    	if(!game_running && !mainMenu) {
     		
     		batch.draw(game_over_img , 100, 200);
     		hp_font.draw(batch, "PRESS \"ENTER\" TO PLAY", 185 , 100);
@@ -172,7 +173,7 @@ public class Main extends ApplicationAdapter {
     		}
     	}
     }
-    
+    */
     public void pause() {
     	
     	if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
