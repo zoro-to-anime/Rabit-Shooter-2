@@ -14,16 +14,17 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 
 public class Gui {
-	Texture[] playButton;
+	Texture[] playButton , backButton;
 	Texture[] diffButton;
 	Texture[] easyButton,hardButton,midButton;
-	ImageButton playBtn , diffBtn , easyBtn , midBtn , hardBtn;
-	ImageButtonStyle playStyle , diffStyle , easyStyle , midStyle , hardStyle;
+	ImageButton playBtn , diffBtn , easyBtn , midBtn , hardBtn , backBtn;
+	ImageButtonStyle playStyle , diffStyle , easyStyle , midStyle , hardStyle , backStyle;
 	Stage stage;
 	Texture game_over_img;
 	boolean diff_gui = false;
 	public Gui() {
 	playButton = new Texture[3];
+	backButton = new Texture[3];
 	
 	diffButton = new Texture[3];
 	
@@ -40,6 +41,7 @@ public class Gui {
 	mouseHandle();
 	
 	stage.addActor(playBtn);
+	stage.addActor(backBtn);
 	stage.addActor(diffBtn);
 	stage.addActor(easyBtn);
 	stage.addActor(midBtn);
@@ -52,7 +54,9 @@ public class Gui {
 	public void gameOver(SpriteBatch bat) {
 		bat.draw(game_over_img, 100 , 300);
 	}
-	
+	public void diffMenu() {
+		
+	}
 	public void render(SpriteBatch bat) {
 		stage.act(Gdx.graphics.getDeltaTime());
 		if(Main.mainMenu) {
@@ -72,6 +76,12 @@ public class Gui {
 				Main.game_running = true;
 			}
 		});
+		backBtn.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event , float x , float y) {
+				Main.mainMenu = true;
+			}
+		});
 		diffBtn.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event , float x , float y) {
@@ -82,18 +92,24 @@ public class Gui {
 			@Override
 			public void clicked(InputEvent event , float x , float y) {
 				Main.spawn_time = 1;
+				Main.mainMenu = true;
+				diff_gui = false;
 			}
 		});
 		midBtn.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event , float x , float y) {
 				Main.spawn_time = 0.65f;
+				Main.mainMenu = true;
+				diff_gui = false;
 			}
 		});
 		hardBtn.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event , float x , float y) {
 				Main.spawn_time = 0.4f;
+				Main.mainMenu = true;
+				diff_gui = false;
 			}
 		});
 	}
@@ -103,6 +119,12 @@ public class Gui {
 		playStyle.over = new TextureRegionDrawable(new TextureRegion(playButton[1]));
 		playStyle.down = new TextureRegionDrawable(new TextureRegion(playButton[2]));
 		playBtn = new ImageButton(playStyle); 
+		
+		backStyle = new ImageButtonStyle();
+		backStyle.up = new TextureRegionDrawable(new TextureRegion(backButton[0]));
+		backStyle.over = new TextureRegionDrawable(new TextureRegion(backButton[1]));
+		backStyle.down = new TextureRegionDrawable(new TextureRegion(backButton[2]));
+		backBtn = new ImageButton(backStyle); 
 		
 		diffStyle = new ImageButtonStyle();
 		diffStyle.up = new TextureRegionDrawable(new TextureRegion(diffButton[0]));
@@ -133,6 +155,10 @@ public class Gui {
 		playButton[1] = new Texture(Gdx.files.internal("ui/PlayButton/PlayHover.png"));
 		playButton[2] = new Texture(Gdx.files.internal("ui/PlayButton/PlayClicked.png"));
 		
+		backButton[0] = new Texture(Gdx.files.internal("ui/PlayButton/BackStatic.png"));
+		backButton[1] = new Texture(Gdx.files.internal("ui/PlayButton/BackHover.png"));
+		backButton[2] = new Texture(Gdx.files.internal("ui/PlayButton/BackClicked.png"));
+		
 		diffButton[0] = new Texture(Gdx.files.internal("ui/DifficultyButton/DifficultyStatic.png"));
 		diffButton[1] = new Texture(Gdx.files.internal("ui/DifficultyButton/DifficultyHover.png"));
 		diffButton[2] = new Texture(Gdx.files.internal("ui/DifficultyButton/DifficultyClicked.png"));
@@ -156,6 +182,7 @@ public class Gui {
 			easyButton[i].dispose();
 			midButton[i].dispose();
 			hardButton[i].dispose();
+			backButton[i].dispose();
 		}
         stage.dispose();
 	}
