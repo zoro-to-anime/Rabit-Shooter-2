@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Boss {
 	Texture text;
-	int hp;
+	boolean cooldown = false;
+	int mul = 1;
+	static int hp;
 	float x;
 	float y;
 	float speedX;
@@ -34,6 +36,13 @@ public class Boss {
 		}
 		x += speedX;
 		y += speedY;
+	}
+	public void spawner() {
+		if(Main.score >=(500 * mul)) {
+			Main.boss_spawned = true;
+			//cooldown = true;
+			mul+=2;
+		}
 	}
 	public void render(SpriteBatch bat) {
 		bat.draw(text, x, y);

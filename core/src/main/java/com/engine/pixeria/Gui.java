@@ -1,9 +1,12 @@
 package com.engine.pixeria;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -20,7 +23,22 @@ public class Gui {
 	ImageButton playBtn , diffBtn , easyBtn , midBtn , hardBtn , backBtn;
 	ImageButtonStyle playStyle , diffStyle , easyStyle , midStyle , hardStyle , backStyle;
 	Stage stage;
+	BitmapFont hp_font; 
+    BitmapFont score_font; 
+    BitmapFont boss_font;
+    BitmapFont hpOrange;
+    BitmapFont hpRed;
+    BitmapFont hpGreen;
+    BitmapFont scoreGold;
+    BitmapFont scoreRoyal;
+    BitmapFont scoreMagenta;
+    BitmapFont scoreBrown;
 	Texture game_over_img;
+	FreeTypeFontGenerator mine;
+    FreeTypeFontGenerator.FreeTypeFontParameter mine_para;
+    
+    Main main = new Main();
+    
 	boolean diff_gui = false;
 	public Gui() {
 	playButton = new Texture[3];
@@ -34,6 +52,9 @@ public class Gui {
 	game_over_img = new Texture("ui/gameover.png");
 	stage = new Stage();
 	Gdx.input.setInputProcessor(stage);
+	
+	font_handle();
+	
 	loadImages();
 	
 	createImages();
@@ -47,8 +68,9 @@ public class Gui {
 	stage.addActor(midBtn);
 	stage.addActor(hardBtn);
 	}
-	public void mainMenu() {
+	public void mainMenu(SpriteBatch bat) {
 		ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+		boss_font.draw(bat, "JEW SHOOTER", 175 , 500);
 		playBtn.setPosition(263, 200);
 		diffBtn.setPosition(263, 100);
 		
@@ -60,6 +82,25 @@ public class Gui {
 	public void gameOver(SpriteBatch bat) {
 		bat.draw(game_over_img, 100 , 300);
 		backBtn.setPosition(263, 100);
+		playBtn.setPosition(-2063, 200);
+		diffBtn.setPosition(-2063, 100);
+		
+		main.powerUp.power_x = 700;
+		main.powerUp.power_y = 700;
+		
+		Main.player.x = 350;
+		Main.player.y = 350;
+		Main.player.hp = 100;
+	
+		Main.bots.clear();
+		main.bullet.clear();
+	
+		Main.score = 0;
+		
+		Main.boss_spawned = false;
+		main.boss.x = 300;
+		main.boss.y = -200;
+		Boss.hp = 300;
 	}
 	public void diffMenu() {
 		ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
@@ -71,10 +112,19 @@ public class Gui {
 		hardBtn.setPosition(263, 200);
 		backBtn.setPosition(263, 100);
 	}
+	public void sample_gui(SpriteBatch bat) {
+    	hp_font.draw(bat, "HEALTH : "+Main.player.hp, 75 , 755 );
+    	score_font.draw(bat, "SCORE : "+Main.score, 75 , 725 );
+    	if(Main.boss_spawned) {
+    		boss_font.draw(bat, "BOSS HP : "+Boss.hp, 300 , 745 );
+    	}
+    	change_color();
+    }
+	
 	public void render(SpriteBatch bat) {
 		stage.act(Gdx.graphics.getDeltaTime());
 		if(Main.mainMenu) {
-			mainMenu();
+			mainMenu(bat);
 	        stage.draw();
 		}
 		else if (diff_gui) {
@@ -84,6 +134,9 @@ public class Gui {
 		else if(Main.gameOver){
 			gameOver(bat);
 			stage.draw();
+		}
+		else if(Main.game_running) {
+			sample_gui(bat);
 		}
 		else {
 			backBtn.setPosition(-800, 0);	
@@ -95,6 +148,63 @@ public class Gui {
 		}
 
 	}
+	public void font_handle() {
+    	mine = new FreeTypeFontGenerator(Gdx.files.internal("Minecraft.ttf"));
+        mine_para = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        mine_para.size = 30;
+        
+        //nigga 1
+        
+        mine_para.color = Color.CHARTREUSE;
+        hp_font = mine.generateFont(mine_para);
+        hpGreen = hp_font;
+        mine_para.color = Color.ORANGE;
+        hpOrange = mine.generateFont(mine_para);
+        mine_para.color = Color.FIREBRICK;
+        hpRed = mine.generateFont(mine_para);
+        
+        //nigga 2
+        
+        mine_para.color = Color.BROWN;
+        score_font = mine.generateFont(mine_para);
+        scoreBrown = score_font;
+        mine_para.color = Color.ROYAL;
+        scoreRoyal = mine.generateFont(mine_para);
+        mine_para.color = Color.GOLD;
+        scoreGold = mine.generateFont(mine_para);
+        mine_para.color = Color.MAGENTA;
+        scoreMagenta = mine.generateFont(mine_para);
+        
+        mine_para.size = 60;
+        mine_para.color = Color.SALMON;
+        
+        boss_font = mine.generateFont(mine_para);
+        
+        mine.dispose();
+    }
+	public void change_color() {
+    	if (Main.player.hp <= 20) {
+    	    hp_font = hpRed;
+    	} else if (Main.player.hp <= 60) {
+    	    hp_font = hpOrange;
+    	} else {
+    	    hp_font = hpGreen;
+    	}
+
+    	//diddy
+    	if(Main.score >= 300 ) {
+    		score_font = scoreMagenta;
+    	}
+    	else if(Main.score >= 200) {
+    		score_font = scoreRoyal;
+    	}
+    	else if(Main.score >= 100) {
+    		score_font = scoreGold;
+    	}
+    	else {
+    		score_font = scoreBrown;
+    	}
+    }
 	public void mouseHandle() {
 		playBtn.addListener(new ClickListener(){
 			@Override
@@ -213,6 +323,8 @@ public class Gui {
 			hardButton[i].dispose();
 			backButton[i].dispose();
 		}
+		hp_font.dispose();
+        score_font.dispose();
         stage.dispose();
 	}
 }

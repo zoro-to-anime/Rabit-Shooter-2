@@ -18,20 +18,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
-    BitmapFont hp_font; 
-    BitmapFont score_font; 
-    BitmapFont boss_font;
-    BitmapFont hpOrange;
-    BitmapFont hpRed;
-    BitmapFont hpGreen;
-    BitmapFont scoreGold;
-    BitmapFont scoreRoyal;
-    BitmapFont scoreMagenta;
-    BitmapFont scoreBrown;
-    
-    FreeTypeFontGenerator mine;
-    FreeTypeFontGenerator.FreeTypeFontParameter mine_para;
-    
     Texture player_img;
     Texture poo_img;
     Texture whiteFull;
@@ -40,7 +26,7 @@ public class Main extends ApplicationAdapter {
     Texture game_over_img;
     
     Rectangle boss_r;
-    boolean boss_spawned = false;
+    static boolean boss_spawned = false;
     static boolean game_running = false;
     static boolean mainMenu = true;
     boolean pause = false;
@@ -52,7 +38,7 @@ public class Main extends ApplicationAdapter {
     PowerUp powerUp; 
     Boss boss;
     Gui gui;
-    int player_dmg = 10;
+    int player_dmg = 100;
     int playerhp = 100;
     float kill_cd = 0;
     public static int score = 0;
@@ -64,8 +50,6 @@ public class Main extends ApplicationAdapter {
     @Override
     public void create() { //test
         batch = new SpriteBatch();
-        hp_font = new BitmapFont();
-        score_font = new BitmapFont();
         
         whiteFull = new Texture("ui/white.png");
         
@@ -75,11 +59,7 @@ public class Main extends ApplicationAdapter {
         boss_img = new Texture("entity/poopboss.png");
         
         
-        
-        font_handle();
-        
-        // nigga class
-        
+       
         player = new Player(player_img,player_speed,100);
         powerUp = new PowerUp(player);
         gui = new Gui();
@@ -112,9 +92,10 @@ public class Main extends ApplicationAdapter {
         }
         
         kill_entity();
-        change_color();
-        sample_gui();
+        //change_color();
+        //sample_gui();
         //hit();
+        boss.spawner();
         
         temp_bot_spawn_timer += Gdx.graphics.getDeltaTime();
         bullet_cd += Gdx.graphics.getDeltaTime();
@@ -135,48 +116,7 @@ public class Main extends ApplicationAdapter {
         batch.end(); // end nigga
         
     }
-    /*
-    public void first_launch() {
-    	if(mainMenu) {
-    		boss_font.draw(batch, "JEW SHOOTER", 175 , 500);
-    		hp_font.draw(batch, "PRESS \"ENTER\" TO PLAY", 185 , 300);
-    		if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-    			mainMenu = false;
-    			game_running = true;
-    		}
-    	}
-    }
-    /*public void game_over() {
-    	if(!game_running && !mainMenu) {
-    		
-    		batch.draw(game_over_img , 100, 200);
-    		hp_font.draw(batch, "PRESS \"ENTER\" TO PLAY", 185 , 100);
-    		
-    		powerUp.power_status = false;
-    		powerUp.power_x = 700;
-    		powerUp.power_y = 700;
-    		
-    		player.x = 350;
-    		player.y = 350;
-    		player.hp = 100;
-    	
-    		bots.clear();
-    		bullet.clear();
-    	
-    		score = 0;
-    		
-    		boss_spawned = false;
-    		boss.x = 300;
-    		boss.y = -200;
-    		boss.hp = 300;
-    		
-    		
-    		if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-    			game_running = true;
-    		}
-    	}
-    }
-    */
+    
     public void pause() {
     	
     	if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
@@ -195,10 +135,10 @@ public class Main extends ApplicationAdapter {
     			boss.update();	
     		}
     	}
-    	if(boss.hp == 20) {
+    	if(Boss.hp <= 20) {
     		for(int i = 1 ; i<=20 ; i++) {
     			spawnbots();
-    			boss.hp-=1;
+    			Boss.hp-=1;
     		}
     	}
     	
@@ -213,83 +153,20 @@ public class Main extends ApplicationAdapter {
     	if(player.hp<=0) {
     		game_running = false;
     		gameOver = true;
+    		mainMenu = false;
     	}
     	if(player.x>800 || player.x <0 || player.y+50 > 800 || player.y <0) {
     		player.hp -= 20;
 			player.x = 350;
 			player.y = 350;
     	}
-    	if(boss.hp<=0) {
+    	if(Boss.hp<=0) {
     		boss.x = 300;
     		boss.y = -100;
     		boss_spawned = false;
+    		Boss.hp = 500;
     	}
     }
-    public void font_handle() {
-    	mine = new FreeTypeFontGenerator(Gdx.files.internal("Minecraft.ttf"));
-        mine_para = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        mine_para.size = 30;
-        
-        //nigga 1
-        
-        mine_para.color = Color.CHARTREUSE;
-        hp_font = mine.generateFont(mine_para);
-        hpGreen = hp_font;
-        mine_para.color = Color.ORANGE;
-        hpOrange = mine.generateFont(mine_para);
-        mine_para.color = Color.FIREBRICK;
-        hpRed = mine.generateFont(mine_para);
-        
-        //nigga 2
-        
-        mine_para.color = Color.BROWN;
-        score_font = mine.generateFont(mine_para);
-        scoreBrown = score_font;
-        mine_para.color = Color.ROYAL;
-        scoreRoyal = mine.generateFont(mine_para);
-        mine_para.color = Color.GOLD;
-        scoreGold = mine.generateFont(mine_para);
-        mine_para.color = Color.MAGENTA;
-        scoreMagenta = mine.generateFont(mine_para);
-        
-        mine_para.size = 60;
-        mine_para.color = Color.SALMON;
-        
-        boss_font = mine.generateFont(mine_para);
-        
-        mine.dispose();
-    }
-    public void sample_gui() {
-    	hp_font.draw(batch, "HEALTH : "+player.hp, 75 , 755 );
-    	score_font.draw(batch, "SCORE : "+score, 75 , 725 );
-    	if(boss_spawned) {
-    		boss_font.draw(batch, "BOSS HP : "+boss.hp, 300 , 745 );
-    	}
-    }
-    public void change_color() {
-    	if (player.hp <= 20) {
-    	    hp_font = hpRed;
-    	} else if (player.hp <= 60) {
-    	    hp_font = hpOrange;
-    	} else {
-    	    hp_font = hpGreen;
-    	}
-
-    	//diddy
-    	if(score >= 300 ) {
-    		score_font = scoreMagenta;
-    	}
-    	else if(score >= 200) {
-    		score_font = scoreRoyal;
-    	}
-    	else if(score >= 100) {
-    		score_font = scoreGold;
-    	}
-    	else {
-    		score_font = scoreBrown;
-    	}
-    }
-    
     public void bulletspawn() {
     	if(bullet_cd>=0.5f) {
     		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
@@ -373,9 +250,7 @@ public class Main extends ApplicationAdapter {
     public void dispose() {
         batch.dispose();
         player_img.dispose();
-        hp_font.dispose();
-        score_font.dispose();
-        boss_font.dispose();
+        
         poo_img.dispose();
         bot_img.dispose();
         boss_img.dispose();
