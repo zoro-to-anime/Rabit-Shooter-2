@@ -49,13 +49,27 @@ public class Gui {
 	}
 	public void mainMenu() {
 		ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-		playBtn.setPosition(263, 100);
+		playBtn.setPosition(263, 200);
+		diffBtn.setPosition(263, 100);
+		
+		backBtn.setPosition(-800, 0);	
+		easyBtn.setPosition(-800, 0);
+		midBtn.setPosition(-800, 0);
+		hardBtn.setPosition(-800, 0);
 	}
 	public void gameOver(SpriteBatch bat) {
 		bat.draw(game_over_img, 100 , 300);
+		backBtn.setPosition(263, 100);
 	}
 	public void diffMenu() {
+		ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+		playBtn.setPosition(-2063, 200);
+		diffBtn.setPosition(-2063, 100);
 		
+		easyBtn.setPosition(263, 400);
+		midBtn.setPosition(263, 300);
+		hardBtn.setPosition(263, 200);
+		backBtn.setPosition(263, 100);
 	}
 	public void render(SpriteBatch bat) {
 		stage.act(Gdx.graphics.getDeltaTime());
@@ -63,8 +77,21 @@ public class Gui {
 			mainMenu();
 	        stage.draw();
 		}
+		else if (diff_gui) {
+			diffMenu();
+			stage.draw();
+		}
 		else if(Main.gameOver){
 			gameOver(bat);
+			stage.draw();
+		}
+		else {
+			backBtn.setPosition(-800, 0);	
+			easyBtn.setPosition(-800, 0);
+			midBtn.setPosition(-800, 0);
+			hardBtn.setPosition(-800, 0);
+			playBtn.setPosition(-2063, 200);
+			diffBtn.setPosition(-2063, 100);
 		}
 
 	}
@@ -80,12 +107,14 @@ public class Gui {
 			@Override
 			public void clicked(InputEvent event , float x , float y) {
 				Main.mainMenu = true;
+				diff_gui = false;
 			}
 		});
 		diffBtn.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event , float x , float y) {
 				diff_gui = true;
+				Main.mainMenu = false;
 			}
 		});
 		easyBtn.addListener(new ClickListener(){
@@ -155,9 +184,9 @@ public class Gui {
 		playButton[1] = new Texture(Gdx.files.internal("ui/PlayButton/PlayHover.png"));
 		playButton[2] = new Texture(Gdx.files.internal("ui/PlayButton/PlayClicked.png"));
 		
-		backButton[0] = new Texture(Gdx.files.internal("ui/PlayButton/BackStatic.png"));
-		backButton[1] = new Texture(Gdx.files.internal("ui/PlayButton/BackHover.png"));
-		backButton[2] = new Texture(Gdx.files.internal("ui/PlayButton/BackClicked.png"));
+		backButton[0] = new Texture(Gdx.files.internal("ui/BackButton/BackStatic.png"));
+		backButton[1] = new Texture(Gdx.files.internal("ui/BackButton/BackHover.png"));
+		backButton[2] = new Texture(Gdx.files.internal("ui/BackButton/BackClicked.png"));
 		
 		diffButton[0] = new Texture(Gdx.files.internal("ui/DifficultyButton/DifficultyStatic.png"));
 		diffButton[1] = new Texture(Gdx.files.internal("ui/DifficultyButton/DifficultyHover.png"));
